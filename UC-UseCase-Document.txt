@@ -1,0 +1,452 @@
+================================================================================
+  USE CASE DOCUMENT
+  Project   : AI Agentic Tool — QA Automation Transformation
+  Version   : 1.0  |  Date: April 7, 2026
+  Prepared by: Senior Test Automation Architect & AI Solutions Architect
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SECTION 1 — DOCUMENT PURPOSE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This document captures all Use Cases for the Single AI Agentic Tool that
+automates the end-to-end QA lifecycle, covering:
+
+  Requirements Ingestion → Test Design → Framework Migration →
+  Test Quality Evaluation → CI/CD Pipeline Deployment
+
+Migration Scope:
+  FROM : Cypress + TypeScript + MochaAwesome Report
+  TO   : Playwright + TypeScript + YAML Config + Azure DevOps CI/CD Pipeline
+
+AI Components:
+  RAG (Retrieval-Augmented Generation) — grounded requirement parsing
+  LangChain                            — multi-agent orchestration
+  Deep Eval                            — LLM output quality gate
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SECTION 2 — USE CASE SUMMARY TABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ ID     | Use Case Name                                  | Primary Actor        | Priority
+ -------|------------------------------------------------|----------------------|---------
+ UC-001 | Automated Test Generation from Requirements    | QA Engineer / BA     | P0
+ UC-002 | Cypress-to-Playwright Test Migration           | QA Automation Engr   | P0
+ UC-003 | AI Quality Gate — Test Evaluation Scoring     | QA Lead              | P1
+ UC-004 | Azure DevOps CI/CD Pipeline Auto-Generation   | DevOps Engineer      | P1
+ UC-005 | End-to-End Agentic Workflow Orchestration      | QA Lead / DevOps     | P0
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SECTION 3 — DETAILED USE CASES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+────────────────────────────────────────────────────────────────────────────────
+ UC-001 : AUTOMATED TEST GENERATION FROM BUSINESS REQUIREMENTS
+────────────────────────────────────────────────────────────────────────────────
+
+ Use Case ID     : UC-001
+ Use Case Name   : Automated Test Generation from Business Requirements
+ Priority        : P0 — Critical
+ Version         : 1.0
+
+ Actor(s)
+ ─────────────────────────────────────────────────────────────────────────────
+ Primary Actor   : QA Engineer / Business Analyst
+ Secondary Actor : AI Requirement Agent (RAG), AI Test Design Agent (LangChain)
+ Stakeholder     : QA Lead, Head of QA
+
+ Goal
+ ─────────────────────────────────────────────────────────────────────────────
+ Automatically ingest business requirement documents and generate ready-to-run
+ Playwright TypeScript test cases without manual scripting effort.
+
+ Pre-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. AI Agentic Tool is deployed and accessible
+ 2. Requirements document is available in one of these formats:
+    - Azure DevOps Boards Work Items (JIRA-style stories)
+    - BDD Gherkin feature files (.feature)
+    - Word / PDF / Confluence page export
+ 3. Playwright TypeScript project scaffold is available in Azure DevOps repo
+ 4. QA Engineer has access credentials to Azure DevOps
+
+ Main Flow
+ ─────────────────────────────────────────────────────────────────────────────
+ Step 1  : QA Engineer uploads requirement document to AI Agentic Tool UI
+ Step 2  : Requirement Agent (RAG) vectorises the document content and
+           retrieves relevant context from the knowledge base
+ Step 3  : RAG Agent extracts testable scenarios with:
+             - Feature name
+             - Scenario title and description
+             - Preconditions
+             - Expected behaviours
+             - Negative / edge case paths
+ Step 4  : Extracted scenarios are presented to QA Engineer for review
+           [HUMAN-IN-THE-LOOP CHECKPOINT — QA Engineer approval required]
+ Step 5  : Upon approval, Test Design Agent (LangChain) generates Playwright
+           TypeScript test scripts mapped to each approved scenario
+ Step 6  : Evaluation Agent (Deep Eval) scores each generated test for:
+             - Assertion accuracy
+             - Coverage completeness
+             - Hallucination detection
+ Step 7  : Tests passing Deep Eval quality threshold are committed to
+           Azure DevOps repository on a feature branch
+ Step 8  : QA Engineer raises Pull Request for peer review and merge
+
+ Alternate Flows
+ ─────────────────────────────────────────────────────────────────────────────
+ AF-001  : Deep Eval score < quality threshold
+           → Evaluation Agent flags specific tests
+           → Test Design Agent regenerates flagged tests automatically
+           → Re-evaluated until threshold met or escalated to QA Lead
+
+ AF-002  : Requirement document is ambiguous or incomplete
+           → Requirement Agent raises clarification flags
+           → QA Engineer is notified to provide additional context
+           → Process resumes after clarification
+
+ AF-003  : Azure DevOps connection fails
+           → Tool stores generated tests locally
+           → Alert sent to DevOps Engineer
+           → Manual commit fallback initiated
+
+ Post-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. Playwright TypeScript test scripts are committed to Azure DevOps repo
+ 2. Deep Eval quality report is stored as pipeline artefact
+ 3. Test coverage traceability matrix is updated
+ 4. Notification sent to QA Lead with summary of generated tests
+
+ Business Value
+ ─────────────────────────────────────────────────────────────────────────────
+ - Reduces manual test authoring effort by 70–80% per sprint
+ - Eliminates requirement misinterpretation during test design
+ - Ensures 100% traceability from requirement to test case
+ - Enables QA Engineers to focus on exploratory and risk-based testing
+
+ Exception Handling
+ ─────────────────────────────────────────────────────────────────────────────
+ EX-001  : Unsupported document format → Tool rejects with clear error message
+ EX-002  : Network timeout → Partial results saved; process resumable
+ EX-003  : Empty requirements document → Validation error raised before processing
+
+
+────────────────────────────────────────────────────────────────────────────────
+ UC-002 : CYPRESS-TO-PLAYWRIGHT TEST MIGRATION
+────────────────────────────────────────────────────────────────────────────────
+
+ Use Case ID     : UC-002
+ Use Case Name   : Cypress-to-Playwright Test Migration
+ Priority        : P0 — Critical
+ Version         : 1.0
+
+ Actor(s)
+ ─────────────────────────────────────────────────────────────────────────────
+ Primary Actor   : QA Automation Engineer
+ Secondary Actor : AI Migration Agent (LangChain), AI Evaluation Agent (Deep Eval)
+ Stakeholder     : QA Lead, Engineering Manager
+
+ Goal
+ ─────────────────────────────────────────────────────────────────────────────
+ Automatically convert the existing Cypress + TypeScript test suite into
+ Playwright + TypeScript equivalents, preserving test logic, assertions,
+ and scenario intent without manual rewriting.
+
+ Pre-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. Existing Cypress test files (.cy.ts) are available in Azure DevOps repo
+ 2. MochaAwesome test report artefacts are accessible for reference
+ 3. Playwright TypeScript framework scaffold is set up in target repository
+ 4. Migration Agent knowledge base includes Playwright API documentation,
+    Cypress-to-Playwright mapping patterns, and known conversion rules
+
+ Main Flow
+ ─────────────────────────────────────────────────────────────────────────────
+ Step 1  : QA Automation Engineer selects Cypress test files for migration
+           (individual files, folders, or full test suite)
+ Step 2  : Migration Agent (LangChain) reads each Cypress test file and
+           maps Cypress-specific syntax to Playwright equivalents:
+             - cy.visit()       → page.goto()
+             - cy.get()         → page.locator()
+             - cy.intercept()   → page.route()
+             - before/after hooks → test.beforeAll / test.afterAll
+             - MochaAwesome reports → Playwright HTML reporter
+ Step 3  : Migration Agent generates Playwright TypeScript test files
+ Step 4  : Evaluation Agent (Deep Eval) validates migrated tests for:
+             - Semantic equivalence to original Cypress tests
+             - Syntax correctness and TypeScript compatibility
+             - Assertion completeness
+ Step 5  : QA Engineer reviews migration report (diff view)
+           [HUMAN-IN-THE-LOOP CHECKPOINT — review and approve migrated tests]
+ Step 6  : Approved tests are committed to target Playwright repository
+           in Azure DevOps on a migration feature branch
+ Step 7  : YAML configuration file generated for Playwright test config
+
+ Alternate Flows
+ ─────────────────────────────────────────────────────────────────────────────
+ AF-001  : Cypress syntax not in migration mapping library
+           → Agent flags unsupported patterns with TODO comments inline
+           → QA Engineer is notified to handle manual conversion for those tests
+
+ AF-002  : Deep Eval semantic equivalence score < 85%
+           → Migration Agent retries with alternative mapping strategy
+           → If still below threshold, test flagged for manual review
+
+ AF-003  : Large test suite (500+ files)
+           → Migration Agent processes in batches of 50 files
+           → Progress dashboard updated in real time
+
+ Post-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. All Cypress tests migrated to Playwright TypeScript in Azure DevOps repo
+ 2. Migration summary report published (migrated / flagged / manual counts)
+ 3. Playwright config YAML file created and committed
+ 4. MochaAwesome report references replaced with Playwright reporter config
+
+ Business Value
+ ─────────────────────────────────────────────────────────────────────────────
+ - Eliminates weeks of manual migration effort (estimated 3–4 weeks → 1 day)
+ - Preserves existing test investment and coverage
+ - Reduces human error during syntax conversion
+ - Accelerates adoption of Playwright cross-browser capabilities
+
+ Exception Handling
+ ─────────────────────────────────────────────────────────────────────────────
+ EX-001  : Corrupt or unreadable Cypress file → Skipped with error logged
+ EX-002  : TypeScript compilation errors in output → Flagged for manual fix
+ EX-003  : Git push failure → Local backup of migrated files retained
+
+
+────────────────────────────────────────────────────────────────────────────────
+ UC-003 : AI QUALITY GATE — TEST EVALUATION SCORING
+────────────────────────────────────────────────────────────────────────────────
+
+ Use Case ID     : UC-003
+ Use Case Name   : AI Quality Gate — Test Evaluation Scoring
+ Priority        : P1 — High
+ Version         : 1.0
+
+ Actor(s)
+ ─────────────────────────────────────────────────────────────────────────────
+ Primary Actor   : QA Lead
+ Secondary Actor : Deep Eval Evaluation Agent, LangChain Orchestrator
+ Stakeholder     : Head of QA, Engineering Manager
+
+ Goal
+ ─────────────────────────────────────────────────────────────────────────────
+ Automatically score all AI-generated and migrated test cases using Deep Eval
+ metrics to enforce a quality gate before any test is committed to the
+ repository or included in the CI/CD pipeline.
+
+ Pre-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. Test cases have been generated (UC-001) or migrated (UC-002)
+ 2. Deep Eval evaluation framework is configured with quality thresholds:
+    - Assertion Accuracy    : ≥ 90%
+    - Hallucination Score   : ≤ 5%
+    - Coverage Completeness : ≥ 85%
+    - Relevance Score       : ≥ 90%
+ 3. QA Lead has access to the Deep Eval evaluation dashboard
+
+ Main Flow
+ ─────────────────────────────────────────────────────────────────────────────
+ Step 1  : Evaluation Agent receives batch of AI-generated / migrated tests
+ Step 2  : Agent runs Deep Eval metrics against each test:
+             - Hallucination Check : Does the test reflect actual requirements?
+             - Assertion Accuracy  : Are assertions valid and meaningful?
+             - Coverage            : Are all scenario paths covered?
+             - Relevance           : Is the test aligned to the feature scope?
+ Step 3  : Each test receives a composite quality score (0–100)
+ Step 4  : Tests scoring ≥ threshold are marked PASS and queued for commit
+ Step 5  : Tests scoring < threshold are marked FAIL with specific reasons
+ Step 6  : QA Lead receives evaluation report with PASS/FAIL breakdown
+           [HUMAN-IN-THE-LOOP CHECKPOINT — QA Lead reviews FAIL list]
+ Step 7  : FAIL tests are either:
+             a. Regenerated automatically by the responsible Agent, OR
+             b. Escalated to QA Engineer for manual correction
+ Step 8  : Re-evaluated tests are scored again before final approval
+
+ Alternate Flows
+ ─────────────────────────────────────────────────────────────────────────────
+ AF-001  : Entire batch fails evaluation
+           → QA Lead is alerted immediately
+           → Root cause analysis report generated
+           → Requirement Agent re-ingests source document for re-generation
+
+ AF-002  : Evaluation service unavailable
+           → Tests held in pending state
+           → QA Lead notified; manual review fallback available
+
+ Post-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. Quality evaluation report saved as Azure DevOps pipeline artefact
+ 2. All committed tests have passed Deep Eval quality gate
+ 3. QA metrics dashboard updated with evaluation scores
+ 4. Traceability: each test record includes its Deep Eval score
+
+ Business Value
+ ─────────────────────────────────────────────────────────────────────────────
+ - Eliminates low-quality AI-generated tests reaching production pipeline
+ - Provides objective, automated quality measurement replacing subjective review
+ - Builds confidence in AI-generated test suites for stakeholders
+
+
+────────────────────────────────────────────────────────────────────────────────
+ UC-004 : AZURE DEVOPS CI/CD PIPELINE AUTO-GENERATION
+────────────────────────────────────────────────────────────────────────────────
+
+ Use Case ID     : UC-004
+ Use Case Name   : Azure DevOps CI/CD Pipeline Auto-Generation
+ Priority        : P1 — High
+ Version         : 1.0
+
+ Actor(s)
+ ─────────────────────────────────────────────────────────────────────────────
+ Primary Actor   : DevOps Engineer
+ Secondary Actor : Pipeline Agent (LangChain), Azure DevOps API
+ Stakeholder     : Engineering Manager, QA Lead
+
+ Goal
+ ─────────────────────────────────────────────────────────────────────────────
+ Automatically generate a complete Azure DevOps YAML pipeline configuration
+ for the Playwright test suite and trigger the CI/CD build, test, and
+ deployment pipeline without manual YAML authoring.
+
+ Pre-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. Playwright tests have passed Deep Eval quality gate (UC-003)
+ 2. Tests are committed to Azure DevOps repository
+ 3. Azure DevOps project and pipeline service connections are configured
+ 4. Pipeline Agent knowledge base includes Azure DevOps YAML schema,
+    Playwright pipeline templates, and environment configuration patterns
+
+ Main Flow
+ ─────────────────────────────────────────────────────────────────────────────
+ Step 1  : Pipeline Agent receives test suite metadata from orchestrator:
+             - Test file paths
+             - Browser configuration (Chromium / Firefox / WebKit)
+             - Environment targets (Dev / QA / Staging)
+             - Reporting requirements
+ Step 2  : Agent generates Azure DevOps YAML pipeline file including:
+             - Trigger conditions (branch push / PR / scheduled)
+             - Node.js and Playwright dependency installation steps
+             - Parallel test execution matrix configuration
+             - Test result publishing to Azure DevOps Test Plans
+             - HTML report artefact upload
+             - Environment-specific deployment gates
+ Step 3  : Generated YAML is validated against Azure DevOps schema
+ Step 4  : DevOps Engineer reviews the generated YAML file
+           [HUMAN-IN-THE-LOOP CHECKPOINT — DevOps Engineer approval required]
+ Step 5  : Approved YAML is committed as azure-pipelines.yml to repository root
+ Step 6  : Azure DevOps pipeline is registered and first run triggered
+ Step 7  : Pipeline execution results reported back to QA Lead dashboard
+
+ Alternate Flows
+ ─────────────────────────────────────────────────────────────────────────────
+ AF-001  : YAML schema validation fails
+           → Pipeline Agent regenerates with corrected syntax
+           → DevOps Engineer notified with specific error details
+
+ AF-002  : Azure DevOps API permission denied
+           → DevOps Engineer prompted to verify service principal permissions
+
+ Post-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. azure-pipelines.yml committed and version-controlled in Azure DevOps
+ 2. Pipeline registered in Azure DevOps Pipelines
+ 3. First pipeline run completed with pass/fail results published
+ 4. Test results visible in Azure DevOps Test Plans dashboard
+
+ Business Value
+ ─────────────────────────────────────────────────────────────────────────────
+ - Eliminates manual YAML pipeline authoring (estimated 4–8 hours saved)
+ - Ensures pipeline follows organisational standards consistently
+ - Enables zero-friction CI/CD adoption for new test suites
+
+
+────────────────────────────────────────────────────────────────────────────────
+ UC-005 : END-TO-END AGENTIC WORKFLOW ORCHESTRATION
+────────────────────────────────────────────────────────────────────────────────
+
+ Use Case ID     : UC-005
+ Use Case Name   : End-to-End Agentic Workflow Orchestration
+ Priority        : P0 — Critical
+ Version         : 1.0
+
+ Actor(s)
+ ─────────────────────────────────────────────────────────────────────────────
+ Primary Actor   : QA Lead / DevOps Engineer
+ Secondary Actor : LangChain Orchestrator, All 5 Specialised Agents
+ Stakeholder     : CTO, Head of QA, Engineering Leadership
+
+ Goal
+ ─────────────────────────────────────────────────────────────────────────────
+ Execute the complete AI-driven QA lifecycle from a single tool entry point:
+ upload one requirement document and have the system automatically generate
+ tests, migrate legacy tests, evaluate quality, and trigger CI/CD pipeline
+ deployment — all without manual intervention between steps.
+
+ Pre-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. All individual agents (UC-001 to UC-004) are operational
+ 2. LangChain orchestrator is configured with agent routing logic
+ 3. Azure DevOps repo and pipeline service connections are active
+ 4. QA Lead has initiator access to the AI Agentic Tool
+
+ Main Flow
+ ─────────────────────────────────────────────────────────────────────────────
+ Step 1  : QA Lead uploads requirement document and selects workflow mode:
+             - NEW TESTS ONLY (UC-001 + UC-003 + UC-004)
+             - MIGRATION ONLY (UC-002 + UC-003 + UC-004)
+             - FULL PIPELINE  (all agents, all UCs)
+ Step 2  : Orchestrator activates Requirement Agent → generates scenarios
+ Step 3  : Orchestrator activates Test Design Agent → generates Playwright tests
+ Step 4  : Orchestrator activates Migration Agent → migrates existing Cypress tests
+ Step 5  : Orchestrator activates Evaluation Agent → runs Deep Eval quality gate
+ Step 6  : Human-in-the-Loop review presented to QA Lead for final sign-off
+           [HUMAN-IN-THE-LOOP CHECKPOINT — mandatory before pipeline trigger]
+ Step 7  : Orchestrator activates Pipeline Agent → generates and registers YAML
+ Step 8  : CI/CD pipeline triggered; results streamed back to tool dashboard
+ Step 9  : End-to-end completion report generated and shared with stakeholders
+
+ Alternate Flows
+ ─────────────────────────────────────────────────────────────────────────────
+ AF-001  : Any agent fails mid-workflow
+           → Orchestrator pauses and captures failure context
+           → QA Lead notified with specific failure agent and reason
+           → Option to retry from failure point or restart full workflow
+
+ Post-conditions
+ ─────────────────────────────────────────────────────────────────────────────
+ 1. Complete test suite committed to Azure DevOps repository
+ 2. CI/CD pipeline executed and results published
+ 3. End-to-end execution report archived as project artefact
+ 4. Full audit trail of agent decisions logged for traceability
+
+ Business Value
+ ─────────────────────────────────────────────────────────────────────────────
+ - Delivers complete QA automation from zero to deployed pipeline in hours
+ - Single tool replaces 5+ manual processes across QA and DevOps teams
+ - Demonstrates transformative ROI suitable for enterprise-wide adoption
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SECTION 4 — USE CASE TRACEABILITY MATRIX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Use Case | AI Agent Used          | Azure DevOps Touch       | Deep Eval Gate | Priority
+ ---------|------------------------|--------------------------|----------------|----------
+ UC-001   | RAG + LangChain        | Boards API, Repo Commit  | YES            | P0
+ UC-002   | LangChain Migration    | Repo Commit, YAML Config | YES            | P0
+ UC-003   | Deep Eval              | Test Plans, Artefacts    | N/A (IS gate)  | P1
+ UC-004   | LangChain Pipeline     | Pipelines, Repo YAML     | YES            | P1
+ UC-005   | All Agents (LangChain) | Boards, Repo, Pipelines  | YES            | P0
+
+
+================================================================================
+  END OF USE CASE DOCUMENT
+  Version : 1.0  |  April 7, 2026
+================================================================================

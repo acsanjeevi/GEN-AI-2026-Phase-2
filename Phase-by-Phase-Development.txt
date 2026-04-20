@@ -1,0 +1,581 @@
+================================================================================
+  PHASE-BY-PHASE DEVELOPMENT PLAN
+  Project   : AI Agentic Tool (QA-AIAT) — QA Automation Transformation
+  Version   : 1.0  |  Date: April 7, 2026
+  Framework : LangChain + RAG + Deep Eval + Playwright + Azure DevOps
+================================================================================
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE DEPENDENCY FLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [Requirement Docs]
+       │
+       ▼
+  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+  │  PHASE 1    │────▶│  PHASE 2    │────▶│  PHASE 3    │
+  │  RAG Agent  │     │  LangChain  │     │  Migration  │
+  │  Requirement│     │  Test Design│     │  Agent      │
+  └─────────────┘     └─────────────┘     └─────────────┘
+                                                 │
+                                                 ▼
+  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+  │  PHASE 6    │◀────│  PHASE 5    │◀────│  PHASE 4    │
+  │ Orchestrator│     │  Pipeline   │     │  Deep Eval  │
+  │  Unified    │     │  Agent YAML │     │  Quality    │
+  │  Entry Point│     │  Azure DevOps     │  Gate       │
+  └─────────────┘     └─────────────┘     └─────────────┘
+       │
+       ▼
+  [Azure DevOps CI/CD Pipeline Triggered]
+  [Test Results Published to Azure Test Plans]
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE 1 — REQUIREMENT INGESTION & ANALYSIS AGENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase Number    : Phase 1
+ Phase Name      : Requirement Ingestion & Analysis Agent
+ Sprint Effort   : 3 hours
+
+ Objective
+ ─────────────────────────────────────────────────────────────────────────────
+ Parse raw business requirement documents using RAG (Retrieval-Augmented
+ Generation) and extract a structured, prioritised list of testable scenarios.
+ This is the entry point of the entire agentic pipeline — all downstream
+ phases depend on the quality of this output.
+
+ AI Components Used
+ ─────────────────────────────────────────────────────────────────────────────
+ PRIMARY   : RAG — document vectorisation, semantic retrieval, context grounding
+ SECONDARY : LangChain — document loader chain, extraction prompt chain,
+             output structuring chain
+ EVALUATOR : Deep Eval — hallucination detection on extracted scenarios
+             (validates scenario content is grounded in the source document)
+
+ Input
+ ─────────────────────────────────────────────────────────────────────────────
+ Accepted formats:
+   - Azure DevOps Boards work items (User Stories, Epics, Acceptance Criteria)
+   - BDD Gherkin feature files (.feature)
+   - Word / PDF documents
+   - Confluence page HTML exports
+   - Plain text requirement specifications
+
+ Output
+ ─────────────────────────────────────────────────────────────────────────────
+ For each extracted scenario:
+   - Feature Name (logical grouping)
+   - Scenario ID (auto-assigned, e.g. SCN-001)
+   - Scenario Title (short descriptive name)
+   - Preconditions (what must be true before the test runs)
+   - Expected Behaviour (what success looks like)
+   - Negative / Edge Case Paths (boundary conditions and failure scenarios)
+   - Priority Tag (P0 / P1 / P2 based on requirement criticality signals)
+   - Source Reference (traceability back to requirement line/section)
+
+ Azure DevOps Integration
+ ─────────────────────────────────────────────────────────────────────────────
+ - Requirements pulled directly from Azure Boards via REST API (Work Items)
+ - Extracted scenarios stored as JSON artefact in Azure DevOps pipeline run
+ - Traceability links created between Work Item IDs and Scenario IDs
+
+ Human-in-the-Loop Checkpoint
+ ─────────────────────────────────────────────────────────────────────────────
+ CHECKPOINT LOCATION : After scenario extraction, before Phase 2 trigger
+ WHO REVIEWS         : QA Lead / QA Engineer
+ REVIEW ACTION       : Approve, edit, or reject individual extracted scenarios
+ GATE CONDITION      : Phase 2 does NOT start until QA Lead explicit approval
+ TOOL BEHAVIOUR      : Presents scenarios in review dashboard with source context
+
+ Success Criteria / Acceptance Criteria
+ ─────────────────────────────────────────────────────────────────────────────
+ AC-1 : ≥ 90% scenario extraction accuracy compared to manual expert review
+ AC-2 : All P0 (critical) scenarios identified and correctly tagged
+ AC-3 : Deep Eval hallucination score ≤ 5% across extracted scenarios
+ AC-4 : Every scenario has a traceable link back to source requirement
+ AC-5 : Both positive and negative / edge case scenarios extracted per feature
+ AC-6 : Output delivered in structured JSON format consumable by Phase 2
+
+ Dependencies
+ ─────────────────────────────────────────────────────────────────────────────
+ DEPENDS ON  : None — this is the pipeline entry point
+ BLOCKS      : Phase 2 (Test Case Generation) — cannot proceed without approval
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE 2 — INTELLIGENT TEST CASE GENERATION AGENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase Number    : Phase 2
+ Phase Name      : Intelligent Test Case Generation Agent
+ Sprint Effort   : 4 hours
+
+ Objective
+ ─────────────────────────────────────────────────────────────────────────────
+ Transform the structured testable scenarios from Phase 1 into executable
+ Playwright TypeScript test scripts. The Test Design Agent uses LangChain
+ prompt chains to generate test files that follow Playwright conventions
+ and project-specific patterns.
+
+ AI Components Used
+ ─────────────────────────────────────────────────────────────────────────────
+ PRIMARY   : LangChain — multi-step prompt chain for test script generation;
+             context-aware generation using Playwright API documentation
+             retrieved from RAG knowledge base
+ SECONDARY : RAG — retrieves Playwright TypeScript patterns, project coding
+             standards, and existing test templates from knowledge base
+ EVALUATOR : Deep Eval — assertion accuracy and coverage completeness scoring
+
+ Input
+ ─────────────────────────────────────────────────────────────────────────────
+ - Approved structured scenarios from Phase 1 (JSON format)
+ - Playwright TypeScript coding standards from RAG knowledge base
+ - Project-specific page object patterns (if available in knowledge base)
+ - Test data templates from RAG store
+
+ Output
+ ─────────────────────────────────────────────────────────────────────────────
+ For each approved scenario:
+   - Playwright TypeScript test file (.spec.ts)
+   - Test describe block matching Feature Name
+   - Individual test() blocks per scenario
+   - Meaningful assertions using Playwright expect() API
+   - Precondition setup in beforeEach / beforeAll blocks
+   - Parameterised test data where applicable
+   - Inline comments referencing source Scenario ID for traceability
+
+ Azure DevOps Integration
+ ─────────────────────────────────────────────────────────────────────────────
+ - Generated test files committed to Azure DevOps repo on feature branch
+ - Branch naming convention: feature/ai-gen-tests-[sprint-id]
+ - Commit message includes Scenario IDs for automated traceability
+ - Test file artefact published to pipeline run
+
+ Human-in-the-Loop Checkpoint
+ ─────────────────────────────────────────────────────────────────────────────
+ CHECKPOINT LOCATION : After generation, before Deep Eval scoring (Phase 4)
+ WHO REVIEWS         : QA Engineer
+ REVIEW ACTION       : Spot-check generated test logic; approve or flag for regen
+ GATE CONDITION      : Flagged tests are regenerated before proceeding to Phase 4
+
+ Success Criteria / Acceptance Criteria
+ ─────────────────────────────────────────────────────────────────────────────
+ AC-1 : One Playwright test file generated per approved scenario
+ AC-2 : All tests use Playwright TypeScript syntax (no Cypress patterns)
+ AC-3 : Each test contains at least one meaningful assertion
+ AC-4 : Test files compile without TypeScript errors
+ AC-5 : Positive and negative test cases both generated per scenario
+ AC-6 : Scenario ID traceability comment present in every test block
+
+ Dependencies
+ ─────────────────────────────────────────────────────────────────────────────
+ DEPENDS ON  : Phase 1 — approved scenario list (JSON)
+ BLOCKS      : Phase 4 (Deep Eval Quality Gate) — feeds generated tests
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE 3 — CYPRESS-TO-PLAYWRIGHT MIGRATION AGENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase Number    : Phase 3
+ Phase Name      : Cypress-to-Playwright Migration Agent
+ Sprint Effort   : 3 hours
+
+ Objective
+ ─────────────────────────────────────────────────────────────────────────────
+ Automatically convert the existing Cypress + TypeScript test suite into
+ semantically equivalent Playwright + TypeScript tests. This phase runs
+ in parallel with Phase 2 (new test generation) and feeds into Phase 4
+ for quality evaluation of migrated tests.
+
+ AI Components Used
+ ─────────────────────────────────────────────────────────────────────────────
+ PRIMARY   : LangChain — Cypress-to-Playwright syntax mapping chain;
+             pattern recognition and AST-aware conversion reasoning
+ SECONDARY : RAG — retrieves Cypress API → Playwright API mapping rules,
+             conversion patterns, known edge cases from knowledge base
+ EVALUATOR : Deep Eval — semantic equivalence validation between source
+             Cypress test intent and migrated Playwright test
+
+ Cypress → Playwright Mapping Reference (Key Conversions)
+ ─────────────────────────────────────────────────────────────────────────────
+ Cypress Syntax              → Playwright Equivalent
+ ─────────────────────────────────────────────────────────────────────────────
+ cy.visit(url)               → await page.goto(url)
+ cy.get(selector)            → page.locator(selector)
+ cy.contains(text)           → page.getByText(text)
+ cy.click()                  → await locator.click()
+ cy.type(text)               → await locator.fill(text)
+ cy.intercept()              → await page.route()
+ cy.request()                → request fixture / APIRequestContext
+ before() / after()          → test.beforeAll() / test.afterAll()
+ beforeEach() / afterEach()  → test.beforeEach() / test.afterEach()
+ expect(x).to.equal(y)       → expect(x).toBe(y)
+ Cypress.env()               → process.env with dotenv
+ MochaAwesome report         → Playwright HTML reporter / Azure reporter
+ ─────────────────────────────────────────────────────────────────────────────
+
+ Input
+ ─────────────────────────────────────────────────────────────────────────────
+ - Existing Cypress TypeScript test files (.cy.ts) from Azure DevOps repo
+ - MochaAwesome HTML report artefacts (reference for intent verification)
+ - Cypress-to-Playwright mapping rule library in RAG knowledge base
+ - Playwright TypeScript project scaffold in target repository
+
+ Output
+ ─────────────────────────────────────────────────────────────────────────────
+ - Migrated Playwright TypeScript test files (.spec.ts)
+ - YAML playwright.config.ts configuration file for test settings
+ - Migration summary report:
+     - Total files processed
+     - Successfully migrated count
+     - Flagged for manual review count (unsupported patterns)
+     - TODO comments in flagged test lines
+ - Diff view showing Cypress original vs. Playwright migrated (side-by-side)
+
+ Azure DevOps Integration
+ ─────────────────────────────────────────────────────────────────────────────
+ - Source Cypress files read from Azure DevOps repo (source branch)
+ - Migrated Playwright files committed to Azure DevOps repo (target branch)
+ - Migration report published as pipeline artefact
+ - Azure DevOps Work Item comment added: "Migration completed for [file list]"
+
+ Human-in-the-Loop Checkpoint
+ ─────────────────────────────────────────────────────────────────────────────
+ CHECKPOINT LOCATION : After migration, before Phase 4 Deep Eval evaluation
+ WHO REVIEWS         : QA Automation Engineer
+ REVIEW ACTION       : Review diff view; manually fix flagged TODO patterns
+ GATE CONDITION      : All TODOs must be resolved before Phase 4 proceeds
+
+ Success Criteria / Acceptance Criteria
+ ─────────────────────────────────────────────────────────────────────────────
+ AC-1 : ≥ 95% of Cypress test files successfully migrated without manual fix
+ AC-2 : Zero TypeScript compilation errors in migrated test files
+ AC-3 : Deep Eval semantic equivalence score ≥ 85% per migrated test
+ AC-4 : MochaAwesome report config replaced with Playwright reporter correctly
+ AC-5 : playwright.config.ts YAML file correctly generated and committed
+ AC-6 : Migration summary report published with full traceability
+
+ Dependencies
+ ─────────────────────────────────────────────────────────────────────────────
+ DEPENDS ON  : Source Cypress test files in Azure DevOps repo
+ RUNS IN     : Parallel with Phase 2
+ BLOCKS      : Phase 4 (Deep Eval) — migrated tests evaluated alongside
+               Phase 2 generated tests
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE 4 — TEST QUALITY EVALUATION AGENT (DEEP EVAL GATE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase Number    : Phase 4
+ Phase Name      : Test Quality Evaluation Agent — Deep Eval Quality Gate
+ Sprint Effort   : 2 hours
+
+ Objective
+ ─────────────────────────────────────────────────────────────────────────────
+ Enforce an automated, objective quality gate on every AI-generated test
+ (Phase 2) and every migrated test (Phase 3) using Deep Eval evaluation
+ metrics. No test proceeds to the repository or CI/CD pipeline without
+ passing this gate.
+
+ AI Components Used
+ ─────────────────────────────────────────────────────────────────────────────
+ PRIMARY   : Deep Eval — multi-metric LLM evaluation framework
+             Metrics evaluated:
+               - Hallucination Score    : Is test content grounded in requirements?
+               - Assertion Accuracy     : Are assertions meaningful and correct?
+               - Coverage Completeness  : Are all scenario paths covered?
+               - Relevance Score        : Is the test relevant to the feature?
+               - Semantic Equivalence   : For migrated tests only
+ SECONDARY : LangChain — orchestrates evaluation batch processing and
+             routes FAIL tests back to source agent for regeneration
+
+ Input
+ ─────────────────────────────────────────────────────────────────────────────
+ - Playwright TypeScript test files from Phase 2 (generated) and Phase 3 (migrated)
+ - Source scenarios / requirements (Phase 1 output) as ground truth for evaluation
+ - Deep Eval quality threshold configuration:
+     Hallucination Score    : ≤ 5%
+     Assertion Accuracy     : ≥ 90%
+     Coverage Completeness  : ≥ 85%
+     Relevance Score        : ≥ 90%
+     Semantic Equivalence   : ≥ 85% (migrated tests only)
+
+ Output
+ ─────────────────────────────────────────────────────────────────────────────
+ - Per-test evaluation scorecard with individual metric scores
+ - Composite quality score (0–100) per test file
+ - PASS / FAIL / REVIEW status per test
+ - Specific failure reasons with improvement guidance for FAIL tests
+ - Summary evaluation report (overall pass rate, score distribution)
+ - PASS tests: cleared for Azure DevOps repository commit
+
+ Azure DevOps Integration
+ ─────────────────────────────────────────────────────────────────────────────
+ - Deep Eval evaluation report published as Azure DevOps pipeline artefact
+ - PASS tests automatically queued for commit to Azure DevOps repository
+ - FAIL tests logged as Azure DevOps Work Item comments with reasons
+ - QA metrics dashboard in Azure DevOps updated with evaluation scores
+
+ Human-in-the-Loop Checkpoint
+ ─────────────────────────────────────────────────────────────────────────────
+ CHECKPOINT LOCATION : After evaluation — for FAIL tests that Agent cannot fix
+ WHO REVIEWS         : QA Lead
+ REVIEW ACTION       : Review FAIL tests with deep reasoning; decide: regen or manual fix
+ GATE CONDITION      : Phase 5 (Pipeline Agent) does NOT trigger until ≥ 90%
+                       of tests in batch have achieved PASS status
+ ESCALATION PATH     : If < 70% pass rate → escalate to QA Lead + restart Phase 1
+
+ Success Criteria / Acceptance Criteria
+ ─────────────────────────────────────────────────────────────────────────────
+ AC-1 : ≥ 90% of tests achieve PASS status on first evaluation run
+ AC-2 : Zero tests committed to repo with hallucination score > 5%
+ AC-3 : Evaluation report published within 10 minutes of input receipt
+ AC-4 : FAIL tests include actionable, specific improvement guidance
+ AC-5 : Regenerated FAIL tests re-evaluated before final commit decision
+
+ Dependencies
+ ─────────────────────────────────────────────────────────────────────────────
+ DEPENDS ON  : Phase 2 (generated tests) + Phase 3 (migrated tests)
+              Phase 1 output (ground truth scenarios) for evaluation reference
+ BLOCKS      : Phase 5 (Pipeline Agent) — requires quality gate pass
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE 5 — AZURE DEVOPS YAML PIPELINE AUTO-GENERATION AGENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase Number    : Phase 5
+ Phase Name      : Azure DevOps YAML Pipeline Auto-Generation Agent
+ Sprint Effort   : 2 hours
+
+ Objective
+ ─────────────────────────────────────────────────────────────────────────────
+ Automatically generate a complete, valid Azure DevOps YAML pipeline configuration
+ for the Playwright test suite that has passed the Deep Eval quality gate.
+ The Pipeline Agent produces a production-ready CI/CD pipeline definition
+ without manual YAML authoring.
+
+ AI Components Used
+ ─────────────────────────────────────────────────────────────────────────────
+ PRIMARY   : LangChain — YAML generation chain; pipeline template composition
+             chain; environment-aware configuration chain
+ SECONDARY : RAG — retrieves Azure DevOps YAML schema, Playwright pipeline
+             templates, environment variable patterns, and organisational
+             pipeline standards from knowledge base
+
+ Generated YAML Pipeline Contents
+ ─────────────────────────────────────────────────────────────────────────────
+ - Trigger configuration (branch push / PR / scheduled / manual)
+ - Node.js installation and version pinning
+ - NPM dependency installation (playwright + dependencies)
+ - Playwright browser installation step
+ - Parallel test execution matrix (Chromium / Firefox / WebKit)
+ - Environment-specific variables and secrets (referenced, not hardcoded)
+ - Test result publication to Azure DevOps Test Plans
+ - HTML report artefact upload to Azure DevOps
+ - Post-test notification triggers (pass / fail alerts)
+ - Environment deployment gates (QA → Staging → Production progression)
+
+ Input
+ ─────────────────────────────────────────────────────────────────────────────
+ - PASS test files metadata from Phase 4 (paths, browser config, environment)
+ - Azure DevOps project configuration (project name, repo name, service connections)
+ - Pipeline requirements from QA Lead (environments, parallel config, schedules)
+ - Azure DevOps YAML templates and standards from RAG knowledge base
+
+ Output
+ ─────────────────────────────────────────────────────────────────────────────
+ - azure-pipelines.yml — complete CI/CD pipeline definition file
+ - playwright.config.ts YAML — Playwright test configuration (if not from Phase 3)
+ - Pipeline registration confirmation from Azure DevOps API
+ - First pipeline run triggered and status reported
+
+ Azure DevOps Integration
+ ─────────────────────────────────────────────────────────────────────────────
+ - azure-pipelines.yml committed to repository root via Azure DevOps API
+ - Pipeline registered in Azure DevOps Pipelines via REST API
+ - First pipeline run triggered automatically on commit
+ - Test results published directly to Azure DevOps Test Plans
+ - Build artefacts (HTML report) uploaded to Azure DevOps Artefacts
+
+ Human-in-the-Loop Checkpoint
+ ─────────────────────────────────────────────────────────────────────────────
+ CHECKPOINT LOCATION : After YAML generation, before pipeline registration
+ WHO REVIEWS         : DevOps Engineer
+ REVIEW ACTION       : Review generated YAML for environment, security,
+                       and organisational compliance
+ GATE CONDITION      : DevOps Engineer explicit approval before Azure DevOps
+                       pipeline registration and first run trigger
+
+ Success Criteria / Acceptance Criteria
+ ─────────────────────────────────────────────────────────────────────────────
+ AC-1 : Generated YAML passes Azure DevOps schema validation (0 errors)
+ AC-2 : All required pipeline stages present (install, test, publish, deploy)
+ AC-3 : No hardcoded secrets — all credentials referenced via pipeline variables
+ AC-4 : First pipeline run completes with ≥ 85% test pass rate
+ AC-5 : Test results visible in Azure DevOps Test Plans after run
+ AC-6 : HTML Playwright report accessible as pipeline artefact
+
+ Dependencies
+ ─────────────────────────────────────────────────────────────────────────────
+ DEPENDS ON  : Phase 4 PASS (Deep Eval quality gate clearance)
+              Phase 3 playwright.config.ts (if migration path taken)
+ BLOCKS      : Phase 6 (Orchestration) final completion
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE 6 — END-TO-END ORCHESTRATION & SINGLE TOOL INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase Number    : Phase 6
+ Phase Name      : End-to-End Orchestration & Single Tool Integration
+ Sprint Effort   : 3 hours
+
+ Objective
+ ─────────────────────────────────────────────────────────────────────────────
+ Unify all five agents (Phases 1–5) under a single LangChain orchestration
+ layer, accessible via ONE entry point. The orchestrator manages agent routing,
+ workflow state, inter-agent data passing, error recovery, and Human-in-the-Loop
+ checkpoints. The result is a single, deployable AI Agentic Tool.
+
+ AI Components Used
+ ─────────────────────────────────────────────────────────────────────────────
+ PRIMARY   : LangChain — Master Orchestrator (agent routing, memory, tool use,
+             workflow state machine, error recovery chains)
+ SECONDARY : RAG — unified knowledge base serving all agents from one vector store
+ EVALUATOR : Deep Eval — master evaluation dashboard aggregating all phase scores
+
+ Workflow Modes (selectable from unified entry point)
+ ─────────────────────────────────────────────────────────────────────────────
+ Mode A — NEW FEATURE TESTING
+   Phase 1 (RAG) → Phase 2 (LangChain Generate) → Phase 4 (Deep Eval)
+   → Phase 5 (Azure DevOps YAML) → CI/CD Pipeline Run
+
+ Mode B — LEGACY MIGRATION
+   Phase 3 (LangChain Migrate) → Phase 4 (Deep Eval)
+   → Phase 5 (Azure DevOps YAML) → CI/CD Pipeline Run
+
+ Mode C — FULL PIPELINE (Default for Hackathon Demo)
+   Phase 1 → Phase 2 & Phase 3 (parallel) → Phase 4
+   → Phase 5 → CI/CD Pipeline Run → End-to-End Report
+
+ Orchestration Decision Logic
+ ─────────────────────────────────────────────────────────────────────────────
+ Decision Point 1 : After Phase 1 — has QA Lead approved extracted scenarios?
+                    YES → Trigger Phase 2; NO → Loop back to Phase 1
+ Decision Point 2 : After Phase 4 — has Deep Eval gate been passed?
+                    YES → Trigger Phase 5; NO → Retry agent → re-evaluate
+ Decision Point 3 : After Phase 5 YAML — has DevOps Engineer approved?
+                    YES → Register pipeline and trigger run
+                    NO  → Regenerate YAML with DevOps feedback
+ Decision Point 4 : Pipeline run result — PASS or FAIL reported to dashboard
+
+ Input
+ ─────────────────────────────────────────────────────────────────────────────
+ - User selects Workflow Mode (A / B / C) from single entry point UI
+ - Uploads requirement document and/or selects Cypress test files
+ - Configures parameters: environment, browsers, pipeline schedule
+
+ Output
+ ─────────────────────────────────────────────────────────────────────────────
+ - End-to-End Completion Report including:
+     Scenarios extracted count
+     Tests generated count / migrated count
+     Deep Eval quality gate pass rate and scores
+     YAML pipeline generated and registered confirmation
+     First pipeline run result (pass / fail / pending)
+     Full audit trail of all agent decisions
+     Traceability matrix: Requirement → Scenario → Test → Pipeline Run
+ - Azure DevOps dashboard updated with all run artefacts and test results
+ - Notification sent to QA Lead and Engineering Manager with summary
+
+ Azure DevOps Integration
+ ─────────────────────────────────────────────────────────────────────────────
+ - Orchestrator interfaces with Azure Boards, Repos, Pipelines, and Test Plans
+ - Full audit log stored as Azure DevOps pipeline artefact
+ - End-to-end traceability visible in Azure DevOps Boards work items
+
+ Human-in-the-Loop Checkpoint
+ ─────────────────────────────────────────────────────────────────────────────
+ CHECKPOINT LOCATION : Master review gate before Phase 5 pipeline trigger
+ WHO REVIEWS         : QA Lead (final sign-off on all tests)
+ REVIEW ACTION       : Review end-to-end summary; approve final deployment
+ GATE CONDITION      : CI/CD pipeline NOT triggered without QA Lead sign-off
+
+ Success Criteria / Acceptance Criteria
+ ─────────────────────────────────────────────────────────────────────────────
+ AC-1 : All 5 agents accessible and orchestrated from single entry point
+ AC-2 : All three workflow modes (A / B / C) operate without manual hand-offs
+ AC-3 : End-to-end workflow completes from requirement upload to pipeline run
+        within 90 minutes for a standard sprint test suite
+ AC-4 : Full traceability matrix generated: Requirement → Test → Pipeline
+ AC-5 : Hackathon demo scenario executes end-to-end without interruption
+
+ Dependencies
+ ─────────────────────────────────────────────────────────────────────────────
+ DEPENDS ON  : Phases 1–5 all individually operational and tested
+ COMPLETES   : The full QA-AIAT Agentic Tool
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PHASE SUMMARY TABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase | Name                         | AI Component       | Key Input                 | Key Output                          | Effort   | Status
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ 1     | Requirement Ingestion Agent   | RAG + LangChain    | Requirement Docs/Stories  | Structured Testable Scenarios (JSON) | 3 hours  | Phase 1 of 6
+ 2     | Test Case Generation Agent    | LangChain + RAG    | Approved Scenarios (JSON) | Playwright .spec.ts files            | 4 hours  | Phase 2 of 6
+ 3     | Cypress→Playwright Migration  | LangChain + RAG    | Cypress .cy.ts files      | Migrated Playwright .spec.ts files   | 3 hours  | Phase 3 of 6
+ 4     | Test Quality Evaluation Gate  | Deep Eval          | Phase 2 + Phase 3 tests   | PASS/FAIL scorecard per test         | 2 hours  | Phase 4 of 6
+ 5     | Pipeline Auto-Generation      | LangChain + RAG    | PASS tests + Azure config | azure-pipelines.yml + CI/CD run      | 2 hours  | Phase 5 of 6
+ 6     | Orchestration & Integration   | LangChain (Master) | Workflow mode + all above | End-to-end report + unified tool     | 3 hours  | Phase 6 of 6
+ ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ TOTAL HACKATHON EFFORT: ~17 hours across 4-person team (parallel execution)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ DEFINITION OF DONE — COMPLETE QA-AIAT TOOL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ PHASE COMPLETION CHECKLIST
+ ─────────────────────────────────────────────────────────────────────────────
+ [ ] Phase 1: Requirement Agent extracts scenarios with ≥ 90% accuracy
+ [ ] Phase 1: Deep Eval hallucination score ≤ 5% on extracted scenarios
+ [ ] Phase 1: QA Lead has reviewed and approved extracted scenarios
+ [ ] Phase 2: Playwright TypeScript test files generated for all scenarios
+ [ ] Phase 2: All generated tests compile without TypeScript error
+ [ ] Phase 3: ≥ 95% Cypress tests migrated without manual intervention
+ [ ] Phase 3: Migration summary report published
+ [ ] Phase 4: ≥ 90% of tests achieve Deep Eval PASS status
+ [ ] Phase 4: Zero tests committed with hallucination > 5%
+ [ ] Phase 4: Deep Eval evaluation report published as pipeline artefact
+ [ ] Phase 5: azure-pipelines.yml generated and passes schema validation
+ [ ] Phase 5: No hardcoded secrets in YAML pipeline file
+ [ ] Phase 5: DevOps Engineer has approved pipeline YAML
+ [ ] Phase 5: First Azure DevOps pipeline run triggered successfully
+ [ ] Phase 5: Test results visible in Azure DevOps Test Plans
+ [ ] Phase 6: All 5 agents orchestrated under single LangChain orchestrator
+ [ ] Phase 6: Single entry point UI operational (all 3 workflow modes)
+ [ ] Phase 6: End-to-end demo scenario runs without failure
+
+ INTEGRATION & DEMONSTRATION CHECKLIST
+ ─────────────────────────────────────────────────────────────────────────────
+ [ ] End-to-end run: Requirement uploaded → Scenarios extracted → Tests generated
+ [ ] End-to-end run: Cypress tests migrated → Deep Eval gate passed
+ [ ] End-to-end run: YAML pipeline generated → Azure DevOps pipeline triggered
+ [ ] End-to-end run: Test results published to Azure DevOps Test Plans
+ [ ] Full traceability matrix: Requirement → Scenario → Test → Pipeline Run
+ [ ] QA Lead Human-in-the-Loop checkpoints demonstrated to judges
+ [ ] Deep Eval quality gate demonstrated with both PASS and FAIL scenarios
+ [ ] End-to-end completion within 90 minutes for sample test suite
+
+
+================================================================================
+  END OF PHASE-BY-PHASE DEVELOPMENT PLAN
+  Version : 1.0  |  April 7, 2026
+================================================================================

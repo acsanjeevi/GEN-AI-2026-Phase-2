@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Git Push - Phase-2-week-10-Home Assignment",
+			"type": "shell",
+			"command": "cd \"d:\\GEN AI-2026\\Phase-2-Week-10\\Deliverables\" && git init && git checkout -b \"Phase-2-week-10-Home-Assignment\" 2>nul || git checkout -b \"Phase-2-week-10-Home-Assignment\" && git add . && git commit -m \"Phase-2-week-10-Home Assignment\" && (git remote add origin https://github.com/acsanjeevi/GEN-AI-2026-Phase-2.git 2>nul || git remote set-url origin https://github.com/acsanjeevi/GEN-AI-2026-Phase-2.git) && git push -u origin \"Phase-2-week-10-Home-Assignment\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Git Push Phase-2-week-10",
+			"type": "shell",
+			"command": "PowerShell -ExecutionPolicy Bypass -File \"d:\\GEN AI-2026\\Phase-2-Week-10\\Deliverables\\push-to-github.ps1\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Git Push Phase-2-week-10 v2",
+			"type": "shell",
+			"command": "& './push-to-github.ps1'",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

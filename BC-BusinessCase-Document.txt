@@ -1,0 +1,335 @@
+================================================================================
+  BUSINESS CASE DOCUMENT
+  Project   : AI Agentic Tool — QA Automation Transformation & Framework Migration
+  Version   : 1.0  |  Date: April 7, 2026
+  Prepared by: Senior Test Automation Architect & AI Solutions Architect
+  Audience  : CTO, Head of QA, Engineering Leadership, Hackathon Judges
+================================================================================
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1. EXECUTIVE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Our quality engineering organisation currently operates a Cypress + TypeScript
+test automation framework with MochaAwesome reporting. While functional, this
+approach is constrained by manual test authoring, slow migration timelines, and
+an absence of AI-driven intelligence across the QA lifecycle.
+
+This Business Case proposes the development of a Single AI Agentic Tool —
+a LangChain-orchestrated, RAG-powered, Deep Eval-governed system — that
+automates the entire QA pipeline: from business requirements to deployed
+Playwright tests running in Azure DevOps CI/CD pipelines.
+
+The proposed solution delivers an estimated 75–85% reduction in QA engineering
+effort per sprint, eliminates weeks of manual migration work, and establishes
+an intelligent, self-improving quality assurance capability for the enterprise.
+
+This initiative is proposed for development at the upcoming Hackathon,
+with a working prototype demonstrable within a single-day sprint.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 2. PROBLEM STATEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2.1  The Core Problem
+─────────────────────
+The QA Engineering team currently operates with two fundamental inefficiencies
+that directly impact velocity, quality, and cost:
+
+  PROBLEM 1 — Manual Test Creation
+  Every test case is authored manually from business requirements.
+  This is time-consuming, error-prone, and creates inconsistency across
+  test suites authored by different engineers.
+
+  PROBLEM 2 — Framework Migration Bottleneck
+  The industry has moved decisively to Playwright + TypeScript as the
+  standard for modern web test automation. Our Cypress-based framework is
+  falling behind. A full manual migration is estimated at 3–4 weeks of
+  dedicated engineering effort, delaying new feature delivery.
+
+2.2  Impact of Current State
+─────────────────────────────
+  - 40+ hours per sprint per engineer consumed by manual test authoring
+  - 3–4 weeks of migration effort consuming 2 FTE capacity
+  - No intelligent analysis of test coverage gaps
+  - No automated quality gate on AI-generated or newly authored tests
+  - Manual Azure DevOps YAML authoring required for every new pipeline
+  - MochaAwesome HTML reports not integrated with Azure DevOps Test Plans
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 3. CURRENT STATE ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Dimension             | Current State
+ ─────────────────────────────────────────────────────────────────────────────
+ Test Framework        | Cypress + TypeScript
+ Reporting             | MochaAwesome HTML Reports (standalone, not integrated)
+ Test Authoring        | 100% manual — engineer reads requirements, writes tests
+ Requirement Tracing   | No automated traceability from story to test
+ Framework Currency    | Cypress — slower community adoption vs. Playwright
+ Cross-Browser Support | Limited — Cypress Chrome-first by design
+ CI/CD Integration     | Manual Azure DevOps YAML pipeline creation
+ Quality Gate          | Peer code review only — no objective scoring
+ Migration Timeline    | 3–4 weeks estimated for full Cypress→Playwright move
+ AI Tooling            | None — entirely manual QA lifecycle
+ Coverage Analysis     | Manual review and spreadsheet tracking
+ Repository            | Azure DevOps — Git branching strategy in place
+ ─────────────────────────────────────────────────────────────────────────────
+
+Key Risks in Current State:
+  - Increasing technical debt as Cypress ecosystem ages vs. Playwright
+  - Inconsistent test quality across team members
+  - High context-switching cost for engineers between requirements and test code
+  - No measurable quality metric for test suite health
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 4. PROPOSED SOLUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4.1  Solution Overview
+───────────────────────
+Build a Single AI Agentic Tool — accessible via one unified entry point —
+that orchestrates five specialised AI agents across the complete QA lifecycle.
+
+  Tool Name      : QA-AIAT (QA AI Agentic Tool)
+  Architecture   : LangChain multi-agent orchestration
+  Knowledge Base : RAG (vector store of requirements, docs, templates)
+  Quality Gate   : Deep Eval (LLM output scoring and hallucination detection)
+
+4.2  Migration Target State
+────────────────────────────
+  FROM : Cypress + TypeScript + MochaAwesome Report
+  TO   : Playwright + TypeScript + YAML Config + Azure DevOps CI/CD Pipeline
+
+4.3  AI Component Roles
+────────────────────────
+  Component     | Role in QA-AIAT
+  ─────────────────────────────────────────────────────────────────────────────
+  RAG           | Ingests and retrieves from requirement documents.
+                | Ensures AI-generated content is grounded in YOUR project
+                | knowledge, not generic LLM hallucinations.
+  ─────────────────────────────────────────────────────────────────────────────
+  LangChain     | Orchestrates the sequence of agent tasks. Routes inputs
+                | to the correct agent, maintains workflow memory, and
+                | manages inter-agent communication.
+  ─────────────────────────────────────────────────────────────────────────────
+  Deep Eval     | Acts as an automated quality gate. Scores every AI-generated
+                | test for accuracy, hallucination, relevance, and completeness
+                | before it is committed to the repository.
+  ─────────────────────────────────────────────────────────────────────────────
+
+4.4  Five Specialised Agents
+──────────────────────────────
+  Agent 1 — Requirement Agent  : Parses requirements via RAG; extracts scenarios
+  Agent 2 — Test Design Agent  : Generates Playwright TypeScript tests (LangChain)
+  Agent 3 — Migration Agent    : Converts Cypress tests to Playwright (LangChain)
+  Agent 4 — Evaluation Agent   : Scores test quality via Deep Eval
+  Agent 5 — Pipeline Agent     : Generates Azure DevOps YAML pipelines (LangChain)
+
+4.5  Target State Summary
+──────────────────────────
+ Dimension             | Target State
+ ─────────────────────────────────────────────────────────────────────────────
+ Test Framework        | Playwright + TypeScript
+ Reporting             | Playwright HTML Reporter + Azure DevOps Test Plans
+ Test Authoring        | AI-generated from requirements; engineer reviews only
+ Requirement Tracing   | Automated — every test linked to source requirement
+ Cross-Browser Support | Full — Chromium, Firefox, WebKit via Playwright
+ CI/CD Integration     | Auto-generated Azure DevOps YAML pipeline
+ Quality Gate          | Deep Eval automated scoring (objective, measurable)
+ Migration Timeline    | 1 day with AI Migration Agent (vs. 3–4 weeks manual)
+ AI Tooling            | Full lifecycle AI automation via QA-AIAT
+ Repository            | Azure DevOps — unchanged, same branching strategy
+ ─────────────────────────────────────────────────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 5. ROI JUSTIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5.1  Test Authoring Efficiency
+───────────────────────────────
+ Metric                    | Current State   | Target State     | Saving
+ ──────────────────────────────────────────────────────────────────────────────
+ Hours per sprint (1 engr) | 40 hours        | 5–8 hours        | ~82% reduction
+ Sprint team (4 engineers) | 160 hours/sprint| 20–32 hours/sprt | ~138 hours saved
+ Annual hours (26 sprints) | 4,160 hrs/year  | 520–832 hrs/year | ~3,328–3,640 hrs
+ FTE equivalent saved       | —               | 1.7–2.0 FTE      | High-value reuse
+ ──────────────────────────────────────────────────────────────────────────────
+
+5.2  Framework Migration
+─────────────────────────
+ Metric              | Manual Migration    | AI Migration Agent | Saving
+ ────────────────────────────────────────────────────────────────────────────
+ Effort estimate     | 3–4 weeks / 2 FTE  | 1 day / 0.5 FTE   | ~93% reduction
+ Error rate          | 15–25% syntax errors| < 5% (Deep Eval)  | ~80% fewer errors
+ Re-test cycles      | 3–5 cycles         | 1–2 cycles         | 60% fewer cycles
+ ────────────────────────────────────────────────────────────────────────────
+
+5.3  Pipeline Configuration
+────────────────────────────
+ Metric                | Current State  | Target State     | Saving
+ ─────────────────────────────────────────────────────────────────────────────
+ YAML authoring effort | 4–8 hrs/pipeline| < 30 mins auto  | ~93% reduction
+ YAML error rate       | 20–30%          | < 3%            | ~90% fewer errors
+ New pipeline setup    | 1–2 days        | < 1 hour        | Significant
+ ─────────────────────────────────────────────────────────────────────────────
+
+5.4  Qualitative Benefits
+──────────────────────────
+ - Engineers shift from writing tests to reviewing and refining AI output
+ - Consistent test quality enforced by objective Deep Eval scoring
+ - Faster time-to-market: features testable within the same sprint as delivery
+ - Improved coverage: AI identifies gaps humans miss in manual authoring
+ - Full audit trail from requirement to test to pipeline execution
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 6. RISK ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Risk ID | Risk Description                        | Likelihood | Impact | Mitigation
+ ────────────────────────────────────────────────────────────────────────────────────────────
+ R-001   | LLM hallucinations in generated tests   | Medium     | High   | Deep Eval quality
+         |                                         |            |        | gate with < 5%
+         |                                         |            |        | hallucination threshold
+ ────────────────────────────────────────────────────────────────────────────────────────────
+ R-002   | Cypress syntax not in migration library | Medium     | Medium | Flag-and-notify
+         |                                         |            |        | pattern; manual
+         |                                         |            |        | fallback for edge cases
+ ────────────────────────────────────────────────────────────────────────────────────────────
+ R-003   | AI-generated tests miss critical paths  | Low        | High   | RAG grounding from
+         |                                         |            |        | full requirements;
+         |                                         |            |        | coverage completeness
+         |                                         |            |        | metric in Deep Eval
+ ────────────────────────────────────────────────────────────────────────────────────────────
+ R-004   | Team adoption resistance                | Medium     | Medium | Human-in-the-Loop
+         |                                         |            |        | design maintains
+         |                                         |            |        | engineer control at
+         |                                         |            |        | every key decision
+ ────────────────────────────────────────────────────────────────────────────────────────────
+ R-005   | Azure DevOps YAML generation errors     | Low        | High   | Schema validation
+         |                                         |            |        | before commit;
+         |                                         |            |        | DevOps Engineer
+         |                                         |            |        | approval checkpoint
+ ────────────────────────────────────────────────────────────────────────────────────────────
+ R-006   | LLM model or API unavailability         | Low        | High   | Graceful degradation;
+         |                                         |            |        | partial results saved;
+         |                                         |            |        | retry logic built in
+ ────────────────────────────────────────────────────────────────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 7. SUCCESS METRICS (KPIs)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ KPI Category          | Metric                                 | Target
+ ─────────────────────────────────────────────────────────────────────────────
+ Test Authoring        | Reduction in manual test creation time | ≥ 75%
+ Migration             | Cypress tests migrated accurately      | ≥ 95%
+ Quality               | Deep Eval quality gate pass rate       | ≥ 90%
+ Quality               | Hallucination rate in generated tests  | ≤ 5%
+ Coverage              | Scenario extraction accuracy vs manual | ≥ 90%
+ Pipeline              | YAML pipeline generation accuracy      | ≥ 97%
+ Execution             | First CI pipeline run pass rate        | ≥ 85%
+ Traceability          | Requirement-to-test trace coverage     | 100%
+ Adoption              | Engineer satisfaction score (survey)   | ≥ 4.0/5.0
+ Velocity              | Sprint test coverage increase          | ≥ 30%
+ ─────────────────────────────────────────────────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 8. DELIVERY TIMELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Phase       | Activity                                          | Duration
+ ─────────────────────────────────────────────────────────────────────────────
+ HACKATHON   |                                                   |
+ Discovery   | Use Case finalisation, architecture design,       | Hours 1–2
+             | component selection, team role assignment         |
+ ─────────────────────────────────────────────────────────────────────────────
+ Build Ph 1  | Phase 1: RAG Requirement Agent implementation     | Hours 2–5
+ Build Ph 2  | Phase 2: LangChain Test Generation Agent         | Hours 5–8
+ Build Ph 3  | Phase 3: Cypress→Playwright Migration Agent      | Hours 8–11
+ Build Ph 4  | Phase 4: Deep Eval Quality Gate integration       | Hours 11–13
+ Build Ph 5  | Phase 5: Azure DevOps YAML Pipeline Agent        | Hours 13–15
+ Build Ph 6  | Phase 6: End-to-End Orchestration unification     | Hours 15–17
+ ─────────────────────────────────────────────────────────────────────────────
+ Demo        | End-to-end demonstration to judges                | Hours 17–18
+             | Requirement upload → Playwright tests →           |
+             | Migration → Deep Eval → YAML → Pipeline Run       |
+ ─────────────────────────────────────────────────────────────────────────────
+ POST-HACKATHON (Enterprise Rollout)                             |
+ Sprint 1    | Productionise RAG + LangChain + Deep Eval agents  | 2 weeks
+ Sprint 2    | Enterprise Azure DevOps integration + security    | 2 weeks
+ Sprint 3    | Pilot with one QA team, feedback incorporation    | 2 weeks
+ Sprint 4    | Full team rollout + training + documentation      | 2 weeks
+ ─────────────────────────────────────────────────────────────────────────────
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 9. HACKATHON PITCH SUMMARY (ONE-PAGE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ ┌─────────────────────────────────────────────────────────────────────────┐
+ │  PROJECT NAME                                                           │
+ │  QA-AIAT — QA AI Agentic Tool                                           │
+ │  "From Requirement to Running Pipeline in One Click"                    │
+ └─────────────────────────────────────────────────────────────────────────┘
+
+ PROBLEM STATEMENT
+ ─────────────────
+ QA Engineering teams spend 40+ hours per sprint writing tests manually
+ and face a 3–4 week migration effort to move from Cypress to Playwright.
+ There is no intelligent quality gate on AI-generated or manually authored
+ tests today.
+
+ PROPOSED AI SOLUTION
+ ─────────────────────
+ A Single AI Agentic Tool using LangChain orchestration, RAG-powered
+ requirement parsing, and Deep Eval quality scoring — that automatically
+ generates Playwright TypeScript tests, migrates Cypress legacy tests,
+ evaluates test quality, and triggers Azure DevOps CI/CD pipelines —
+ all from a single entry point with Human-in-the-Loop control.
+
+ KEY INNOVATION DIFFERENTIATOR
+ ──────────────────────────────
+ Unlike generic code copilot tools, QA-AIAT is purpose-built for QA
+ transformation. It uses RAG to ground outputs in YOUR project knowledge,
+ Deep Eval to automatically enforce quality thresholds, and LangChain
+ to chain five specialised agents into one seamless pipeline. No other
+ tool offers migration + generation + evaluation + pipeline deployment
+ in a single, unified, AI-driven workflow.
+
+ EXPECTED OUTCOMES / KPIs
+ ─────────────────────────
+ • 75–82% reduction in test authoring effort per sprint
+ • Cypress → Playwright migration completed in 1 day (vs. 3–4 weeks)
+ • ≥ 90% Deep Eval quality gate pass rate for generated tests
+ • Zero-touch Azure DevOps YAML pipeline generation
+ • 100% requirement-to-test traceability
+
+ TEAM ROLES REQUIRED
+ ────────────────────
+ • 1 × AI/LangChain Engineer         (LangChain orchestration, RAG setup)
+ • 1 × QA Automation Architect       (Playwright, test generation logic)
+ • 1 × DevOps Engineer               (Azure DevOps, YAML pipeline agent)
+ • 1 × Business Analyst / QA Lead    (use case validation, demo stories)
+
+ HACKATHON TIMELINE
+ ───────────────────
+ DISCOVERY (Hours 1–2) → BUILD Ph1–Ph6 (Hours 2–17) → DEMO (Hours 17–18)
+
+ Phase 1: Requirement Agent (RAG)     → Phase 2: Test Generation (LangChain)
+ Phase 3: Migration Agent             → Phase 4: Quality Gate (Deep Eval)
+ Phase 5: Pipeline Agent (YAML)       → Phase 6: Orchestration (Unified Tool)
+
+
+================================================================================
+  END OF BUSINESS CASE DOCUMENT
+  Version : 1.0  |  April 7, 2026
+================================================================================
