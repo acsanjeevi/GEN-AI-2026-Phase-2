@@ -1,0 +1,77 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]:
+      - img [ref=e8]
+      - generic [ref=e10]:
+        - generic [ref=e11]: No-Code UI
+        - generic [ref=e12]: Automation Platform
+    - navigation [ref=e13]:
+      - list [ref=e14]:
+        - listitem [ref=e15]:
+          - link "Dashboard" [ref=e16] [cursor=pointer]:
+            - /url: /
+            - img [ref=e17]
+            - generic [ref=e22]: Dashboard
+        - listitem [ref=e23]:
+          - link "Editor" [ref=e24] [cursor=pointer]:
+            - /url: /editor
+            - img [ref=e25]
+            - generic [ref=e30]: Editor
+        - listitem [ref=e31]:
+          - link "Execution" [ref=e32] [cursor=pointer]:
+            - /url: /execution
+            - img [ref=e33]
+            - generic [ref=e35]: Execution
+        - listitem [ref=e36]:
+          - link "History" [ref=e37] [cursor=pointer]:
+            - /url: /history
+            - img [ref=e38]
+            - generic [ref=e42]: History
+        - listitem [ref=e43]:
+          - link "Settings" [ref=e44] [cursor=pointer]:
+            - /url: /settings
+            - img [ref=e45]
+            - generic [ref=e48]: Settings
+    - button "Collapse sidebar" [ref=e50]:
+      - img [ref=e51]
+      - generic [ref=e53]: Collapse
+  - generic [ref=e54]:
+    - banner [ref=e55]:
+      - 'button "Current theme: System. Click to change." [ref=e56]':
+        - img [ref=e57]
+        - generic [ref=e59]: System
+      - 'generic "Active: light" [ref=e60]'
+    - main [ref=e61]:
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - heading "Dashboard" [level=1] [ref=e65]
+          - paragraph [ref=e66]: Welcome to No-Code UI Automation Platform
+        - generic [ref=e96]:
+          - generic [ref=e98]:
+            - heading "Recent Executions" [level=2] [ref=e100]
+            - status "Loading executions..." [ref=e102]:
+              - img [ref=e103]
+              - generic [ref=e105]: Loading executions...
+              - generic [ref=e106]: Loading executions...
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - heading "Quick Run" [level=2] [ref=e110]
+              - button "Open Full Editor →" [ref=e111]
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - generic [ref=e114]: Base URL *
+                - textbox "Base URL *" [ref=e115]:
+                  - /placeholder: https://example.com
+              - generic [ref=e116]:
+                - generic [ref=e117]:
+                  - generic [ref=e118]: Feature (Gherkin) *
+                  - button "Load sample" [ref=e119]
+                - textbox "Feature (Gherkin) *" [ref=e120]:
+                  - /placeholder: "Feature: My Feature\n  Scenario: My Scenario\n    Given I am on the homepage\n    When I click the button\n    Then I should see the result"
+              - button "Advanced Options" [ref=e121]:
+                - img [ref=e122]
+                - text: Advanced Options
+                - img [ref=e125]
+              - button "Run Test" [ref=e127]:
+                - img [ref=e128]
+                - text: Run Test

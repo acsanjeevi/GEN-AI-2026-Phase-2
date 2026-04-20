@@ -1,0 +1,205 @@
+# Playwright MCP Endpoints Test File
+# Use this with REST clients like Postman, Insomnia, or VS Code REST Client extension
+
+@baseUrl = http://localhost:3000/api/mcp
+
+###
+# 1. Navigate to a URL
+POST {{baseUrl}}/playwright/navigate
+Content-Type: application/json
+
+{
+  "url": "https://example.com"
+}
+
+###
+# 2. Take a snapshot of the page
+POST {{baseUrl}}/playwright/snapshot
+Content-Type: application/json
+
+{}
+
+###
+# 3. Click an element
+POST {{baseUrl}}/playwright/click
+Content-Type: application/json
+
+{
+  "element": "button with text 'More information'",
+  "ref": "1"
+}
+
+###
+# 4. Type text into an input
+POST {{baseUrl}}/playwright/type
+Content-Type: application/json
+
+{
+  "element": "search input",
+  "ref": "2",
+  "text": "Hello World",
+  "submit": false
+}
+
+###
+# 5. Press a key
+POST {{baseUrl}}/playwright/press-key
+Content-Type: application/json
+
+{
+  "key": "Enter"
+}
+
+###
+# 6. Navigate back
+POST {{baseUrl}}/playwright/navigate-back
+Content-Type: application/json
+
+{}
+
+###
+# 7. Navigate forward
+POST {{baseUrl}}/playwright/navigate-forward
+Content-Type: application/json
+
+{}
+
+###
+# 8. Hover over an element
+POST {{baseUrl}}/playwright/hover
+Content-Type: application/json
+
+{
+  "element": "navigation menu",
+  "ref": "3"
+}
+
+###
+# 9. Select an option from dropdown
+POST {{baseUrl}}/playwright/select-option
+Content-Type: application/json
+
+{
+  "element": "country dropdown",
+  "ref": "4",
+  "values": ["USA"]
+}
+
+###
+# 10. Drag and drop
+POST {{baseUrl}}/playwright/drag
+Content-Type: application/json
+
+{
+  "startElement": "draggable item",
+  "startRef": "5",
+  "endElement": "drop zone",
+  "endRef": "6"
+}
+
+###
+# 11. Upload a file
+POST {{baseUrl}}/playwright/file-upload
+Content-Type: application/json
+
+{
+  "paths": ["/path/to/file.txt"]
+}
+
+###
+# 12. Handle a dialog (alert/confirm/prompt)
+POST {{baseUrl}}/playwright/handle-dialog
+Content-Type: application/json
+
+{
+  "accept": true,
+  "promptText": "My Response"
+}
+
+###
+# 13. Take a screenshot
+POST {{baseUrl}}/playwright/take-screenshot
+Content-Type: application/json
+
+{
+  "filename": "test-screenshot.png",
+  "fullPage": true,
+  "type": "png"
+}
+
+###
+# 14. Get console messages
+POST {{baseUrl}}/playwright/console-messages
+Content-Type: application/json
+
+{
+  "onlyErrors": false
+}
+
+###
+# 15. Get network requests
+POST {{baseUrl}}/playwright/network-requests
+Content-Type: application/json
+
+{}
+
+###
+# 16. Wait for element or time
+POST {{baseUrl}}/playwright/wait-for
+Content-Type: application/json
+
+{
+  "text": "Loading complete",
+  "time": 5000
+}
+
+###
+# 17. List all tabs
+POST {{baseUrl}}/playwright/tab-list
+Content-Type: application/json
+
+{}
+
+###
+# 18. Open new tab
+POST {{baseUrl}}/playwright/tab-new
+Content-Type: application/json
+
+{
+  "url": "https://github.com"
+}
+
+###
+# 19. Select a tab
+POST {{baseUrl}}/playwright/tab-select
+Content-Type: application/json
+
+{
+  "index": 0
+}
+
+###
+# 20. Close a tab
+POST {{baseUrl}}/playwright/tab-close
+Content-Type: application/json
+
+{
+  "index": 1
+}
+
+###
+# 21. Resize browser window
+POST {{baseUrl}}/playwright/resize
+Content-Type: application/json
+
+{
+  "width": 1920,
+  "height": 1080
+}
+
+###
+# 22. Close browser
+POST {{baseUrl}}/playwright/close
+Content-Type: application/json
+
+{}

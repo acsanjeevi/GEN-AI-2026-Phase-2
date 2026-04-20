@@ -1,0 +1,959 @@
+{
+	"info": {
+		"_postman_id": "14652a0e-bade-46d9-9e52-a1696ff4d632",
+		"name": "no-code-playwright-agent",
+		"description": "API collection for No-Code Playwright Automation Agent.\n\nNote: With LOCATOR_RESOLUTION_MODE=llm, the system uses LLM to resolve element locators from natural language descriptions. The 'element' field describes what you want to interact with, and the system finds the appropriate element reference automatically.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4356174"
+	},
+	"item": [
+		{
+			"name": "Core APIs",
+			"item": [
+				{
+					"name": "01 - Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Validate Feature Syntax",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Feature: Search Mobiles in Amazon\\n Scenario: Search for Apple Mobiles\\n Given The Amazon home page is loaded\\n When I type \\\"iphone 16\\\" in the \\\"Search Amazon\\\" field\\n  And I click search button\\n Then I verify results displayed\\n When I click on the first iphone link\\n Then I get the text of the iphone title\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/feature/validate-syntax",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"feature",
+								"validate-syntax"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Parse Gherkin File",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Feature: Search Mobiles in Amazon\\n Scenario: Search for Apple Mobiles\\n Given The Amazon home page is loaded\\n When I type \\\"iphone 16\\\" in the \\\"Search Amazon\\\" field\\n  And I click search button\\n Then I verify results displayed\\n When I click on the first iphone link\\n Then I get the text of the iphone title\",\n  \"filePath\": \"features/search.feature\",\n  \"save\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/feature/parse",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"feature",
+								"parse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Check Step",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stepText\": \"Given The Amazon home page is loaded\",\n  \"includePatternAnalysis\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mapping/check-step",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mapping",
+								"check-step"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Map Step",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stepText\": \"I type \\\"iphone 16\\\" in the \\\"Search Amazon\\\" field\",\n  \"keyword\": \"When\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mapping/map-step",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mapping",
+								"map-step"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "06 - Map Scenario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"scenarioName\": \"User Login\",\n  \"steps\": [\n    { \"keyword\": \"Given\", \"text\": \"I am on the login page\" },\n    { \"keyword\": \"When\", \"text\": \"I type \\\"user@test.com\\\" in the \\\"email\\\" field\" },\n    { \"keyword\": \"And\", \"text\": \"I type \\\"password123\\\" in the \\\"password\\\" field\" },\n    { \"keyword\": \"And\", \"text\": \"I click the \\\"Login\\\" button\" },\n    { \"keyword\": \"Then\", \"text\": \"I should see the \\\"Dashboard\\\"\" }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mapping/map-scenario",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mapping",
+								"map-scenario"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MCP Playwright",
+			"item": [
+				{
+					"name": "07 - Create Session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test Session\",\n  \"config\": {\n    \"headless\": false,\n    \"browserType\": \"chromium\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/sessions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "08 - Navigate to URL",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"url\": \"http://leaftaps.com/opentaps\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/navigate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"navigate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "09 - Capture Page Snapshot",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/snapshot",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"snapshot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10 - Type Text (LLM Mode)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"element\": \"username input field\",\n  \"text\": \"DemoSalesManager\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/type",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"type"
+							]
+						},
+						"description": "With LOCATOR_RESOLUTION_MODE=llm, only 'element' description is needed. The system uses LLM to find the appropriate element reference from the page snapshot."
+					},
+					"response": []
+				},
+				{
+					"name": "11 - Click Element (LLM Mode)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"element\": \"Login button\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/click",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"click"
+							]
+						},
+						"description": "With LOCATOR_RESOLUTION_MODE=llm, only 'element' description is needed. The system uses LLM to find the appropriate element reference from the page snapshot."
+					},
+					"response": []
+				},
+				{
+					"name": "12 - Wait For Text/Time",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"Welcome\",\n  \"time\": 5000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/wait-for",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"wait-for"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13 - Take Screenshot",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"filename\": \"screenshot.png\",\n  \"fullPage\": true,\n  \"type\": \"png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/take-screenshot",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"take-screenshot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "14 - Close Browser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mcp/playwright/close",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mcp",
+								"playwright",
+								"close"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LLM APIs",
+			"item": [
+				{
+					"name": "15 - LLM Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/llm/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"llm",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "16 - Suggest Locator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"elementDescription\": \"Login button\",\n  \"domSnapshot\": \"<html><body><form id='loginForm'><input type='text' name='username' placeholder='Username'/><input type='password' name='password' placeholder='Password'/><button type='submit' class='btn btn-primary' data-testid='login-btn'>Login</button></form></body></html>\",\n  \"pageUrl\": \"http://example.com/login\",\n  \"pageTitle\": \"Login Page\",\n  \"preferredStrategies\": [\"testId\", \"role\", \"text\"],\n  \"maxSuggestions\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/llm/suggest-locator",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"llm",
+								"suggest-locator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "17 - Generate Step Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"keyword\": \"When\",\n  \"stepText\": \"I click the Login button\",\n  \"actionType\": \"click\",\n  \"locator\": {\n    \"strategy\": \"testId\",\n    \"value\": \"login-btn\"\n  },\n  \"includeComments\": true,\n  \"codeStyle\": \"async-await\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/llm/generate-step-code",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"llm",
+								"generate-step-code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "18 - Heal Step",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stepText\": \"I click the Login button\",\n  \"originalLocator\": {\n    \"strategy\": \"id\",\n    \"value\": \"login-btn-12345\"\n  },\n  \"errorMessage\": \"Timeout 30000ms exceeded waiting for selector '#login-btn-12345'\",\n  \"currentDomSnapshot\": \"<html><body><form id='loginForm'><input type='text' name='username'/><input type='password' name='password'/><button type='submit' class='btn btn-primary' data-testid='login-button' id='btn-submit'>Sign In</button></form></body></html>\",\n  \"previousDomSnapshot\": \"<html><body><form id='loginForm'><input type='text' name='username'/><input type='password' name='password'/><button type='submit' class='btn btn-primary' id='login-btn-12345'>Login</button></form></body></html>\",\n  \"pageUrl\": \"http://example.com/login\",\n  \"elementDescription\": \"Login button\",\n  \"maxSuggestions\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/llm/heal-step",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"llm",
+								"heal-step"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Execution",
+			"item": [
+				{
+					"name": "20 - Create Test Execution - Testleaf",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scriptId\": \"leaftaps-create-lead\",\n    \"featureContent\": \"Feature: Create Lead in Leaftaps Application\\n  @smoke @createLead\\n  Scenario: Verify user can create a new lead successfully\\n    Given I navigate to Leaftaps application\\n    When I enter username as \\\"Democsr\\\"\\n    And I enter password as \\\"crmsfa\\\"\\n    And I click the login button\\n    When I click on the \\\"CRM\\/SFA\\\" link\\n    And I click on the \\\"Leads\\\" tab\\n    And I click on the \\\"Create Lead\\\" link right side maincontainer focus should be main container\\n    When I enter the Company Name as \\\"TestLeaf\\\" on rightside panel\\n    And I enter the First name as \\\"Sankar\\\" on rightside panel\\n    And I enter the Last name as \\\"Govindharaj\\\" on rightside panel\\n    And I select the Source as \\\"Employee\\\" on rightside panel\\n    And I select the Marketing Campaign as \\\"Automobile\\\" on rightside panel\\n    And I click the Create Lead button on rightside panel\\n    And I wait for 3 seconds\\n    And I click on the \\\"Govindharaj\\\" link\\n    And I wait for 2 seconds\\n    Then the page should contain \\\"Assigned\\\"\",\n    \"baseUrl\": \"http://leaftaps.com/opentaps\",\n    \"name\": \"Create Lead - Leaftaps\",\n    \"browser\": {\n        \"type\": \"chromium\",\n        \"headless\": false\n    },\n    \"options\": {\n        \"maxRetries\": 1,\n        \"timeout\": 300000,\n        \"screenshotOnFailure\": true,\n        \"recordVideo\": true,\n        \"traceEnabled\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/run",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								"run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "20 - Create Test Execution - Amazon",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scriptId\": \"amazon-search-mobiles\",\n    \"featureContent\": \"Feature:Search Product\\n  Scenario: Search Product\\n    Given I navigate to Amazon Home Page\\n    When I type \\\"mobiles\\\" in the \\\"Search Amazon\\\" field\\n  And I click the \\\"Search\\\" button\\n    Then I should see \\\"Results\\\"\",\n    \"baseUrl\": \"https://www.amazon.com/\",\n    \"name\": \"Search Product\",\n    \"browser\": {\n        \"type\": \"chromium\",\n        \"headless\": false\n    },\n    \"options\": {\n        \"maxRetries\": 2,\n        \"timeout\": 30000,\n        \"screenshotOnFailure\": true,\n        \"recordVideo\": true,\n        \"traceEnabled\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/run",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								"run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "20 - Create Test Execution - Redbus",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scriptId\": \"redbus-search-buses\",\n    \"featureContent\": \"Feature: Search for buses in RedBus\\n\\n  Scenario: Search buses from Chennai to Bangalore on today's date\\n    Given I launch the RedBus website\\n    When I click the \\\"From\\\" field\\n   And I click the first suggested match for \\\"Chennai\\\"\\n    And I click the \\\"To\\\" field\\n     And I click the first suggested match for \\\"Bangalore\\\"\\n  And I click the \\\"Search Buses\\\" button\\n    Then I should see a list of available buses\\n When I click on the first matching 'View seats for ..' button in the Search results section\\n Then I should see Lower deck text on the page\\n When I click on the Boarding Point\\n Then I should see View all boarding points button\",\n    \"baseUrl\": \"https://www.redbus.in/\",\n    \"name\": \"Search Bus\",\n    \"browser\": {\n        \"type\": \"chromium\",\n        \"headless\": false\n    },\n    \"options\": {\n        \"maxRetries\": 2,\n        \"timeout\": 30000,\n        \"screenshotOnFailure\": true,\n        \"recordVideo\": true,\n        \"traceEnabled\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/run",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								"run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "20 - Create Test Execution - Salesforce",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"scriptId\": \"salesforce-login\",\n    \"featureContent\": \"Feature: Login to Salesforce\\n\\n  Scenario: Login to Salesforce\\n    Given I load the Salesforce login page\\n  When I type \\\"babu@testleaf.com\\\" in the \\\"Username\\\" field\\n   And I type the Password as \\\"password\\\"\\n And I click on the Log In button\\n\",\n    \"baseUrl\": \"https://login.salesforce.com/\",\n    \"name\": \"Salesforce Login\",\n    \"browser\": {\n        \"type\": \"chromium\",\n        \"headless\": false\n    },\n    \"options\": {\n        \"maxRetries\": 1,\n        \"timeout\": 30000,\n        \"screenshotOnFailure\": true,\n        \"recordVideo\": true,\n        \"traceEnabled\": true\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/run",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								"run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "21 - List Executions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/list?page=1&limit=10&sortBy=createdAt&sortOrder=desc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "22 - Get Running Executions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/running",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								"running"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "23 - Get Execution Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "23 - Get Artifacts Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id/artifacts?type=video",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id",
+								"artifacts"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "video"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "24 - Get Execution Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "25 - Start Execution",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"skipPassed\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id/start",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id",
+								"start"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "26 - Cancel Execution",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reason\": \"User cancelled the test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "27 - Retry Failed Scenario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"useHealing\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id/retry/:itemId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id",
+								"retry",
+								":itemId"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								},
+								{
+									"key": "itemId",
+									"value": "{{itemId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "28 - Get Execution Artifacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id/artifacts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id",
+								"artifacts"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "29 - Delete Execution",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/execution/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"execution",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{executionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "executionId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "itemId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "artifactId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

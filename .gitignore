@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files (keep templates)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/*.log
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
+
+# Test artifacts and run outputs
+artifacts/
+
+# Log files
+logs/
+
+# Sensitive config files
+config/salesforceLogin.json
